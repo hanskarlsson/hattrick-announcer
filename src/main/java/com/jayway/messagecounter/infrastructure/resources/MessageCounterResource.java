@@ -22,7 +22,7 @@ public class MessageCounterResource {
     @GET
     @Timed
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.SECONDS)
-    public MessageCounterView currentCount() {
-        return new MessageCounterView(messageCounter.currentNumberOfReceivedMessages());
+    public MessageCounterView statistics() {
+        return new MessageCounterView(messageCounter.getStatistics());
     }
 }

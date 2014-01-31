@@ -75,7 +75,7 @@ public class RabbitMQConsumer implements Managed {
                     String routingKey = delivery.getEnvelope().getRoutingKey();
 
                     log.debug("Received message on routing key {}.", routingKey);
-                    messageCounter.messageReceived(delivery.getProperties().getMessageId());
+                    messageCounter.messageReceived(delivery.getProperties().getMessageId(), routingKey);
                 }
             }
         } catch (Exception e) {
