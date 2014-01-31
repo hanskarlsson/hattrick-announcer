@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.concurrent.TimeUnit;
 
 @Path("/")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(MediaType.TEXT_HTML)
 public class MessageCounterResource {
     private final MessageCounter messageCounter;
 
@@ -22,7 +22,7 @@ public class MessageCounterResource {
     @GET
     @Timed
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.SECONDS)
-    public String currentCount() {
-        return "{ \"count\" : " + messageCounter.currentNumberOfReceivedMessages() + "}";
+    public MessageCounterView currentCount() {
+        return new MessageCounterView(messageCounter.currentNumberOfReceivedMessages());
     }
 }

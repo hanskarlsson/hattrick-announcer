@@ -9,6 +9,7 @@ import com.jayway.messagecounter.infrastructure.resources.MessageCounterResource
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import com.yammer.dropwizard.views.ViewBundle;
 
 public class BootstrapService extends Service<MessageCounterConfiguration> {
 
@@ -19,6 +20,7 @@ public class BootstrapService extends Service<MessageCounterConfiguration> {
     @Override
     public void initialize(Bootstrap<MessageCounterConfiguration> bootstrap) {
         bootstrap.setName("message-counter");
+        bootstrap.addBundle(new ViewBundle());
     }
 
     @Override
