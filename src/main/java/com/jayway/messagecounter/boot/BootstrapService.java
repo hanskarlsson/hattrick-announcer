@@ -4,6 +4,7 @@ import com.jayway.messagecounter.domain.MessageCounter;
 import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
 import com.jayway.messagecounter.infrastructure.health.TemplateHealthCheck;
 import com.jayway.messagecounter.infrastructure.messaging.RabbitMQConsumer;
+import com.jayway.messagecounter.infrastructure.messaging.RabbitMQServiceRegistrar;
 import com.jayway.messagecounter.infrastructure.resources.MessageCounterResource;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
@@ -26,5 +27,6 @@ public class BootstrapService extends Service<MessageCounterConfiguration> {
         environment.addResource(new MessageCounterResource(messageCounter));
         environment.addHealthCheck(new TemplateHealthCheck(configuration.getMaxMessageIdsToCache(), configuration.getMaxTimeToCacheMessageIds(), configuration.getTimeUnit()));
         environment.manage(new RabbitMQConsumer(configuration.getAmqpUri(), messageCounter));
+        environment.manage(new RabbitMQServiceRegistrar(configuration.getAmqpUri()));
     }
 }
