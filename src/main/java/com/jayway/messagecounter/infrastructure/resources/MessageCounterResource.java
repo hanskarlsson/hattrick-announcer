@@ -21,6 +21,13 @@ public class MessageCounterResource {
 
     @GET
     @Timed
+    public EntryPointView entryPoint() {
+        return new EntryPointView();
+    }
+
+    @GET
+    @Timed
+    @Path("/statistics")
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.SECONDS)
     public MessageCounterView statistics() {
         return new MessageCounterView(messageCounter.getStatistics());
