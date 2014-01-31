@@ -11,10 +11,10 @@
                 <td><a href="/statistics">Message statistics</a></td>
             </tr>
             <tr>
-                <td><a href="/admin/healthcheck">Health Check</a></td>
+                <td><a href="${healthUrl}">Health Check</a></td>
             </tr>
             <tr>
-                <td><a href="/admin/metrics">Metrics</a></td>
+                <td><a href="${metricsUrl}">Metrics</a></td>
             </tr>
         </table>
     </body>
