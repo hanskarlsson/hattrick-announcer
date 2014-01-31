@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -Ddw.http.port=$PORT -Ddw.http.adminPort=$PORT -Ddw.amqpUri="$AMQP_URL" -jar target/messagecounter-lab-1.0-SNAPSHOT.jar server target/classes/message-counter.yml
