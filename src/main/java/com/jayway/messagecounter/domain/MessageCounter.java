@@ -32,21 +32,21 @@ public class MessageCounter {
                 });
     }
 
-    public void messageReceived(String messageId) throws ExecutionException {
-        final boolean messageHasAlreadyBeenCounted;
+    public void messageReceived(String messageId) {
         if (Strings.isNullOrEmpty(messageId)) {
-            messageHasAlreadyBeenCounted = false;
+            log.info("Message was received without message id (current message count is {})", numberOfReceivedMessages.incrementAndGet());
         } else {
-            messageHasAlreadyBeenCounted = messageIdCache.get(messageId, new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    return true;
-                }
-            });
-        }
-
-        if (!messageHasAlreadyBeenCounted) {
-            log.info("Current number of received messages: {}", numberOfReceivedMessages.incrementAndGet());
+            try {
+                messageIdCache.get(messageId, new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        log.info("Current number of received messages: {}", numberOfReceivedMessages.incrementAndGet());
+                        return true;
+                    }
+                });
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
