@@ -1,5 +1,6 @@
 package com.jayway.messagecounter.infrastructure.messaging;
 
+import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageType;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Topic;
@@ -23,7 +24,7 @@ public class RabbitMQServiceRegistrarTest {
 
     @Before public void
     given_service_registrar_is_initialized() {
-        tested = new RabbitMQServiceRegistrar(AMQP_URI);
+        tested = new RabbitMQServiceRegistrar(new MyMessageCounterConfiguration(AMQP_URI));
     }
 
     @Before public void
@@ -80,5 +81,38 @@ public class RabbitMQServiceRegistrarTest {
         assertThat(properties.getMessageId()).isNotEmpty();
         assertThat(properties.getTimestamp()).isNotNull();
         assertThat(properties.getType()).isEqualTo(MessageType.SERVICE_OFFLINE);
+    }
+
+    private static class MyMessageCounterConfiguration extends MessageCounterConfiguration {
+        private final String amqpUri;
+
+        public MyMessageCounterConfiguration(String amqpUri) {
+            this.amqpUri = amqpUri;
+        }
+
+        @Override
+        public String getAmqpUri() {
+            return amqpUri;
+        }
+
+        @Override
+        public String getServiceUrl() {
+            return "http://service-url.com";
+        }
+
+        @Override
+        public String getSourceUrl() {
+            return "http://source-url.com";
+        }
+
+        @Override
+        public String getCreator() {
+            return "creator";
+        }
+
+        @Override
+        public String getDescription() {
+            return "description";
+        }
     }
 }

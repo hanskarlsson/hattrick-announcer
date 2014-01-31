@@ -1,5 +1,6 @@
 package com.jayway.messagecounter.infrastructure.health;
 
+import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
 import com.yammer.metrics.core.HealthCheck;
 
 import java.util.concurrent.TimeUnit;
@@ -9,23 +10,34 @@ public class TemplateHealthCheck extends HealthCheck {
     private final long maxMessageIdsToCache;
     private final long maxTimeToCacheMessageIds;
     private final TimeUnit timeUnit;
+    private final String serviceUrl;
+    private final String sourceUrl;
 
-    public TemplateHealthCheck(long maxMessageIdsToCache, long maxTimeToCacheMessageIds, TimeUnit timeUnit) {
+    public TemplateHealthCheck(MessageCounterConfiguration configuration) {
         super("template");
-        this.maxMessageIdsToCache = maxMessageIdsToCache;
-        this.maxTimeToCacheMessageIds = maxTimeToCacheMessageIds;
-        this.timeUnit = timeUnit;
+        this.maxMessageIdsToCache = configuration.getMaxMessageIdsToCache();
+        this.maxTimeToCacheMessageIds = configuration.getMaxTimeToCacheMessageIds();
+        this.timeUnit = configuration.getTimeUnit();
+        this.serviceUrl = configuration.getServiceUrl();
+        this.sourceUrl = configuration.getSourceUrl();
     }
 
     @Override
     protected Result check() throws Exception {
+        final Result result;
         if (maxMessageIdsToCache < 1) {
-            return Result.unhealthy("Max number of messageIds to cache must be greater than or equal to 1.");
+            result = Result.unhealthy("Max number of messageIds to cache must be greater than or equal to 1.");
         } else if (maxTimeToCacheMessageIds < 1) {
-            return Result.unhealthy("Max time to cache messageIds must be greater than or equal to 1.");
+            result = Result.unhealthy("Max time to cache messageIds must be greater than or equal to 1.");
         } else if (timeUnit.toHours(maxTimeToCacheMessageIds) > ONE_DAY) {
-            return Result.unhealthy("Cannot cache messageIds longer than one day.");
+            result = Result.unhealthy("Cannot cache messageIds longer than one day.");
+        } else if (!serviceUrl.startsWith("http")) {
+            result = Result.unhealthy("Service URL must be a valid http address.");
+        } else if (!sourceUrl.startsWith("http")) {
+            result = Result.unhealthy("Source URL must be a valid http address.");
+        } else {
+            result = Result.healthy();
         }
-        return Result.healthy();
+        return result;
     }
 }

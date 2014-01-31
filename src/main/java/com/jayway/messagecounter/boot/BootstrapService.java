@@ -22,11 +22,11 @@ public class BootstrapService extends Service<MessageCounterConfiguration> {
     }
 
     @Override
-    public void run(MessageCounterConfiguration configuration, Environment environment) {
-        MessageCounter messageCounter = new MessageCounter(configuration.getMaxMessageIdsToCache(), configuration.getMaxTimeToCacheMessageIds(), configuration.getTimeUnit());
+    public void run(MessageCounterConfiguration config, Environment environment) {
+        MessageCounter messageCounter = new MessageCounter(config.getMaxMessageIdsToCache(), config.getMaxTimeToCacheMessageIds(), config.getTimeUnit());
         environment.addResource(new MessageCounterResource(messageCounter));
-        environment.addHealthCheck(new TemplateHealthCheck(configuration.getMaxMessageIdsToCache(), configuration.getMaxTimeToCacheMessageIds(), configuration.getTimeUnit()));
-        environment.manage(new RabbitMQConsumer(configuration.getAmqpUri(), messageCounter));
-        environment.manage(new RabbitMQServiceRegistrar(configuration.getAmqpUri()));
+        environment.addHealthCheck(new TemplateHealthCheck(config));
+        environment.manage(new RabbitMQConsumer(config.getAmqpUri(), messageCounter));
+        environment.manage(new RabbitMQServiceRegistrar(config));
     }
 }

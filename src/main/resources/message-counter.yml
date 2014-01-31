@@ -2,3 +2,8 @@ maxMessageIdsToCache: 10000
 maxTimeToCacheMessageIds: 10
 timeUnit: SECONDS
 amqpUri: amqp://localhost:5672
+
+serviceUrl: http://lab-message-counter.herokuapp.com
+sourceUrl: https://github.com/johanhaleby/message-counter-lab
+creator: Johan Haleby
+description: Counts all messages sent in the lab

@@ -21,6 +21,22 @@ public class MessageCounterConfiguration extends Configuration {
     @JsonProperty
     private String amqpUri = "amqp://localhost:5672";
 
+    @NotEmpty
+    @JsonProperty
+    private String serviceUrl;
+
+    @NotEmpty
+    @JsonProperty
+    private String sourceUrl;
+
+    @NotEmpty
+    @JsonProperty
+    private String creator;
+
+    @NotEmpty
+    @JsonProperty
+    private String description;
+
     public long getMaxMessageIdsToCache() {
         return maxMessageIdsToCache;
     }
@@ -35,5 +51,21 @@ public class MessageCounterConfiguration extends Configuration {
 
     public String getAmqpUri() {
         return amqpUri;
+    }
+
+    public String getServiceUrl() {
+        return serviceUrl;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

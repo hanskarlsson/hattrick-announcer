@@ -1,6 +1,7 @@
 package com.jayway.messagecounter.infrastructure.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Message;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Messages;
@@ -24,14 +25,22 @@ public class RabbitMQServiceRegistrar implements Managed {
     private static final Logger log = LoggerFactory.getLogger(RabbitMQServiceRegistrar.class);
 
     private final String amqpUri;
+    private final String serviceUrl;
+    private final String sourceUrl;
+    private final String creator;
+    private final String description;
 
-    public RabbitMQServiceRegistrar(String amqpUri) {
-        this.amqpUri = amqpUri;
+    public RabbitMQServiceRegistrar(MessageCounterConfiguration config) {
+        this.amqpUri = config.getAmqpUri();
+        this.serviceUrl = config.getServiceUrl();
+        this.sourceUrl = config.getSourceUrl();
+        this.creator = config.getCreator();
+        this.description = config.getDescription();
     }
 
     @Override
     public void start() throws Exception {
-        Message message = Messages.serviceOnline(MessageCounterSettings.APP_ID, "Counts all messages sent in the lab", "Johan Haleby", "http://lab-message-counter.herokuapp.com", "https://github.com/johanhaleby/messagecounter-lab");
+        Message message = Messages.serviceOnline(MessageCounterSettings.APP_ID, description, creator, serviceUrl, sourceUrl);
         sendMessage(message, Topic.SERVICE.getRoutingKey());
         log.info("Registered service {}", MessageCounterSettings.APP_ID);
     }
