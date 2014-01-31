@@ -11,6 +11,7 @@ import com.yammer.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,13 +56,12 @@ public class RabbitMQConsumer implements Managed {
 
     private void startRabbitConsumer() {
         Connection connection = null;
-        Channel channel;
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setUri(amqpUri);
 
             connection = factory.newConnection();
-            channel = connection.createChannel();
+            Channel channel = connection.createChannel();
 
             String queueName = channel.queueDeclare(QUEUE_NAME, true, false, false, null).getQueue();
             channel.queueBind(queueName, Topic.getLabExchange(), ALL_ROUTES);
@@ -69,12 +69,13 @@ public class RabbitMQConsumer implements Managed {
             QueueingConsumer consumer = new QueueingConsumer(channel);
             channel.basicConsume(queueName, true, consumer);
 
+            log.info("RabbitMQ consumer is waiting for messages.");
             while (isRunning) {
                 QueueingConsumer.Delivery delivery = consumer.nextDelivery(1000);
                 if (delivery != null) {
                     String routingKey = delivery.getEnvelope().getRoutingKey();
 
-                    log.info("Received message on routing key {}.", routingKey);
+                    log.debug("Received message on routing key {}.", routingKey);
                     messageCounter.messageReceived(delivery.getProperties().getMessageId());
                 }
             }
@@ -84,7 +85,8 @@ public class RabbitMQConsumer implements Managed {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (Exception ignore) {
+                } catch (Exception e) {
+                    log.error("Error closing connection", e);
                 }
             }
         }

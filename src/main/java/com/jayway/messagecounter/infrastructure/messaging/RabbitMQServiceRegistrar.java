@@ -13,6 +13,7 @@ import com.yammer.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.String.format;
 
 public class RabbitMQServiceRegistrar implements Managed {
     private static final Logger log = LoggerFactory.getLogger(RabbitMQServiceRegistrar.class);
@@ -42,25 +43,26 @@ public class RabbitMQServiceRegistrar implements Managed {
         // It works fine here since we don't need to maintain a connection during the entire life-cycle
         // of this application. (It only sends one message when started and one when ended).
         Connection connection = null;
-        Channel channel;
+
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(amqpUri);
+            factory.setUri(amqpUri);
 
             connection = factory.newConnection();
-            channel = connection.createChannel();
+            Channel channel = connection.createChannel();
 
             AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().headers(message.getMeta()).contentType("application/json").build();
             byte[] bytes = new ObjectMapper().writeValueAsBytes(message.getBody());
 
             channel.basicPublish(Topic.getLabExchange(), routingKey, properties, bytes);
         } catch (Exception e) {
-            log.error("Error when sending message to RabbitMQ", e);
+            log.error(format("Error when sending message to RabbitMQ. Message was: %s", message), e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (Exception ignore) {
+                } catch (Exception e) {
+                    log.error("Error closing connection", e);
                 }
             }
         }
