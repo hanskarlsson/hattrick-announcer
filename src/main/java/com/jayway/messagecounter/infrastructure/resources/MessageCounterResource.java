@@ -47,7 +47,7 @@ public class MessageCounterResource {
 
     @GET
     @Timed
-    @Path("/statistics")
+    @Path("statistics")
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.SECONDS)
     public MessageCounterView statistics() {
         return new MessageCounterView(messageCounter.getStatistics());
