@@ -74,6 +74,7 @@
     </build>
 
     <dependencies>
+        <!-- Production dependencies -->
         <dependency>
             <groupId>com.yammer.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
@@ -84,6 +85,8 @@
             <artifactId>amqp-client</artifactId>
             <version>3.2.3</version>
         </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

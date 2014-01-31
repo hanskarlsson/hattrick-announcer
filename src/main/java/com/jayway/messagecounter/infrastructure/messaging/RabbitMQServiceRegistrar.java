@@ -13,7 +13,12 @@ import com.yammer.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 public class RabbitMQServiceRegistrar implements Managed {
     private static final Logger log = LoggerFactory.getLogger(RabbitMQServiceRegistrar.class);
@@ -51,7 +56,12 @@ public class RabbitMQServiceRegistrar implements Managed {
             connection = factory.newConnection();
             Channel channel = connection.createChannel();
 
-            AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().headers(message.getMeta()).contentType("application/json").build();
+            Map<String, Object> headers = new HashMap<>(message.getMeta());
+            headers.keySet().removeAll(asList("messageId", "appId", "timestamp", "type"));
+
+            AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().appId(message.<String>meta("appId")).
+                    messageId(message.<String>meta("messageId")).type(message.<String>meta("type")).timestamp(new Date(message.<Long>meta("timestamp"))).
+                    headers(headers).contentType("application/json").build();
             byte[] bytes = new ObjectMapper().writeValueAsBytes(message.getBody());
 
             channel.basicPublish(Topic.getLabExchange(), routingKey, properties, bytes);
