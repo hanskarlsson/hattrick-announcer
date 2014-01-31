@@ -15,10 +15,10 @@ If you want to run the program locally you need:
 
 Deployment
 ----------
-The project contains Heroku configurations in the files `system.properties` and `Procfile`. However you need to [add two properties](https://toolbelt.heroku.com/) pointing out the AMQP uri:
+The project contains Heroku configurations in the files `system.properties` and `Procfile`. However you need to [add two properties](https://toolbelt.heroku.com/) pointing out the AMQP url:
 
 ```bash
 heroku config:set AMQP_URL="<amqp_url>"
 ```
 
-Both URLs must contain username and password, port etc.
+URL must contain username and password, port etc.
