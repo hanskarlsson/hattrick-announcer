@@ -2,7 +2,7 @@ message-counter-lab
 ===================
 
 An example of a very simple micro service that counts all messages sent in the lab. It's built using <a href="http://dropwizard.codahale.com">DropWizard</a> and is easily deployed to Heroku and uses AMQP (such as RabbitMQ) to listen for messages.
-The topic exchange to send messages to is called `lab`. It registers itself as a service on boot.
+The topic exchange to send messages to is called `lab`. It registers itself as a <a href="https://github.com/johanhaleby/lab-service-registry">service</a> on boot.
 
 Prerequisites
 -------------
