@@ -5,6 +5,7 @@ import com.jayway.messagecounter.infrastructure.config.MessageCounterConfigurati
 import com.jayway.messagecounter.infrastructure.health.TemplateHealthCheck;
 import com.jayway.messagecounter.infrastructure.messaging.RabbitMQConsumer;
 import com.jayway.messagecounter.infrastructure.messaging.RabbitMQServiceRegistrar;
+import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
 import com.jayway.messagecounter.infrastructure.resources.MessageCounterResource;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
@@ -19,7 +20,7 @@ public class BootstrapService extends Service<MessageCounterConfiguration> {
 
     @Override
     public void initialize(Bootstrap<MessageCounterConfiguration> bootstrap) {
-        bootstrap.setName("message-counter");
+        bootstrap.setName(MessageCounterSettings.APP_ID);
         bootstrap.addBundle(new ViewBundle());
     }
 
