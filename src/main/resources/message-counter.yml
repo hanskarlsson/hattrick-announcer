@@ -1,0 +1,4 @@
+maxMessageIdsToCache: 10000
+maxTimeToCacheMessageIds: 10
+timeUnit: SECONDS
+amqpUri: amqp://localhost:5672
