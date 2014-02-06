@@ -1,7 +1,7 @@
 package com.jayway.messagecounter.infrastructure.messaging;
 
-import com.jayway.messagecounter.domain.MessageCounter;
-import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
+import com.jayway.messagecounter.domain.MessageCounterService;
+import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounter;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Topic;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -20,17 +20,17 @@ public class RabbitMQConsumer implements Managed {
     private static final Logger log = LoggerFactory.getLogger(RabbitMQConsumer.class);
 
     private static final String ALL_ROUTES = "#";
-    private static final String QUEUE_NAME = MessageCounterSettings.APP_ID + "-queue";
+    private static final String QUEUE_NAME = MessageCounter.APP_ID + "-queue";
 
     private final String amqpUri;
-    private final MessageCounter messageCounter;
+    private final MessageCounterService messageCounterService;
 
     private ExecutorService executorService;
     private volatile boolean isRunning = true;
 
-    public RabbitMQConsumer(String amqpUri, MessageCounter messageCounter) {
+    public RabbitMQConsumer(String amqpUri, MessageCounterService messageCounterService) {
         this.amqpUri = amqpUri;
-        this.messageCounter = messageCounter;
+        this.messageCounterService = messageCounterService;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RabbitMQConsumer implements Managed {
                     String routingKey = delivery.getEnvelope().getRoutingKey();
 
                     log.debug("Received message on routing key {}.", routingKey);
-                    messageCounter.messageReceived(delivery.getProperties().getMessageId(), routingKey);
+                    messageCounterService.messageReceived(delivery.getProperties().getMessageId(), routingKey);
                 }
             }
         } catch (Exception e) {

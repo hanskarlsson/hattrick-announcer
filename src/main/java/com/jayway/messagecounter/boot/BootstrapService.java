@@ -1,11 +1,11 @@
 package com.jayway.messagecounter.boot;
 
-import com.jayway.messagecounter.domain.MessageCounter;
+import com.jayway.messagecounter.domain.MessageCounterService;
 import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
 import com.jayway.messagecounter.infrastructure.health.TemplateHealthCheck;
 import com.jayway.messagecounter.infrastructure.messaging.RabbitMQConsumer;
 import com.jayway.messagecounter.infrastructure.messaging.RabbitMQServiceRegistrar;
-import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
+import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounter;
 import com.jayway.messagecounter.infrastructure.resources.MessageCounterResource;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
@@ -20,16 +20,16 @@ public class BootstrapService extends Service<MessageCounterConfiguration> {
 
     @Override
     public void initialize(Bootstrap<MessageCounterConfiguration> bootstrap) {
-        bootstrap.setName(MessageCounterSettings.APP_ID);
+        bootstrap.setName(MessageCounter.APP_ID);
         bootstrap.addBundle(new ViewBundle());
     }
 
     @Override
     public void run(MessageCounterConfiguration config, Environment environment) {
-        MessageCounter messageCounter = new MessageCounter(config.getMaxMessageIdsToCache(), config.getMaxTimeToCacheMessageIds(), config.getTimeUnit());
-        environment.addResource(new MessageCounterResource(messageCounter, config.getHttpConfiguration()));
+        MessageCounterService messageCounterService = new MessageCounterService(config.getMaxMessageIdsToCache(), config.getMaxTimeToCacheMessageIds(), config.getTimeUnit());
+        environment.addResource(new MessageCounterResource(messageCounterService, config.getHttpConfiguration()));
         environment.addHealthCheck(new TemplateHealthCheck(config));
-        environment.manage(new RabbitMQConsumer(config.getAmqpUri(), messageCounter));
+        environment.manage(new RabbitMQConsumer(config.getAmqpUri(), messageCounterService));
         environment.manage(new RabbitMQServiceRegistrar(config));
     }
 }

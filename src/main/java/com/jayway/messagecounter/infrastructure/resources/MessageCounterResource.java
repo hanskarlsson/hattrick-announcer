@@ -1,6 +1,6 @@
 package com.jayway.messagecounter.infrastructure.resources;
 
-import com.jayway.messagecounter.domain.MessageCounter;
+import com.jayway.messagecounter.domain.MessageCounterService;
 import com.yammer.dropwizard.config.HttpConfiguration;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
@@ -20,11 +20,11 @@ public class MessageCounterResource {
     private static final String METRICS = "metrics";
     private static final String HEALTHCHECK = "healthcheck";
     private static final String ADMIN = "admin";
-    private final MessageCounter messageCounter;
+    private final MessageCounterService messageCounterService;
     private final HttpConfiguration httpConfiguration;
 
-    public MessageCounterResource(MessageCounter messageCounter, HttpConfiguration httpConfiguration) {
-        this.messageCounter = messageCounter;
+    public MessageCounterResource(MessageCounterService messageCounterService, HttpConfiguration httpConfiguration) {
+        this.messageCounterService = messageCounterService;
         this.httpConfiguration = httpConfiguration;
     }
 
@@ -50,7 +50,7 @@ public class MessageCounterResource {
     @Path("statistics")
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.SECONDS)
     public MessageCounterView statistics() {
-        return new MessageCounterView(messageCounter.getStatistics());
+        return new MessageCounterView(messageCounterService.getStatistics());
     }
 
     private UriBuilder uriBuilder(UriInfo uriInfo) {

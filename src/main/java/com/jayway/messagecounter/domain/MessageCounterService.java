@@ -13,8 +13,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MessageCounter {
-    private static final Logger log = LoggerFactory.getLogger(MessageCounter.class);
+public class MessageCounterService {
+    private static final Logger log = LoggerFactory.getLogger(MessageCounterService.class);
 
     private AtomicLong numberOfTotalMessages = new AtomicLong();
     private AtomicLong numberOfLogMessages = new AtomicLong();
@@ -24,7 +24,7 @@ public class MessageCounter {
     // For idempotency
     LoadingCache<String, Boolean> messageIdCache;
 
-    public MessageCounter(long maxMessageIdsToCache, long maxTimeToCacheMessageIds, TimeUnit timeUnit) {
+    public MessageCounterService(long maxMessageIdsToCache, long maxTimeToCacheMessageIds, TimeUnit timeUnit) {
         messageIdCache = CacheBuilder.newBuilder()
                 .maximumSize(maxMessageIdsToCache)
                 .expireAfterWrite(maxTimeToCacheMessageIds, timeUnit)

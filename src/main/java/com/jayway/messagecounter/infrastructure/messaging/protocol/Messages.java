@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings.MACHINE_ID;
+import static com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounter.MACHINE_ID;
 import static com.jayway.messagecounter.infrastructure.messaging.protocol.MessageType.*;
 
 public class Messages {

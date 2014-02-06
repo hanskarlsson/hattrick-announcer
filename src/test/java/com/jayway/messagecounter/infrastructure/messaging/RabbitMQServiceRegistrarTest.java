@@ -1,7 +1,7 @@
 package com.jayway.messagecounter.infrastructure.messaging;
 
 import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
-import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
+import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounter;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageType;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Topic;
 import com.rabbitmq.client.*;
@@ -59,8 +59,8 @@ public class RabbitMQServiceRegistrarTest {
         assertThat(delivery).describedAs("Message was not delivered within 3 seconds").isNotNull();
 
         AMQP.BasicProperties properties = delivery.getProperties();
-        assertThat(properties.getAppId()).isEqualTo(MessageCounterSettings.APP_ID);
-        assertThat(properties.getHeaders().get("streamId").toString()).isEqualTo(MessageCounterSettings.APP_ID);
+        assertThat(properties.getAppId()).isEqualTo(MessageCounter.APP_ID);
+        assertThat(properties.getHeaders().get("streamId").toString()).isEqualTo(MessageCounter.APP_ID);
         assertThat(properties.getMessageId()).isNotEmpty();
         assertThat(properties.getTimestamp()).isNotNull();
         assertThat(properties.getType()).isEqualTo(MessageType.SERVICE_ONLINE);
@@ -76,8 +76,8 @@ public class RabbitMQServiceRegistrarTest {
         assertThat(delivery).describedAs("Message was not delivered within 3 seconds").isNotNull();
 
         AMQP.BasicProperties properties = delivery.getProperties();
-        assertThat(properties.getAppId()).isEqualTo(MessageCounterSettings.APP_ID);
-        assertThat(properties.getHeaders().get("streamId").toString()).isEqualTo(MessageCounterSettings.APP_ID);
+        assertThat(properties.getAppId()).isEqualTo(MessageCounter.APP_ID);
+        assertThat(properties.getHeaders().get("streamId").toString()).isEqualTo(MessageCounter.APP_ID);
         assertThat(properties.getMessageId()).isNotEmpty();
         assertThat(properties.getTimestamp()).isNotNull();
         assertThat(properties.getType()).isEqualTo(MessageType.SERVICE_OFFLINE);

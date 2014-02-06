@@ -3,7 +3,7 @@ package com.jayway.messagecounter.infrastructure.messaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.messagecounter.infrastructure.config.MessageCounterConfiguration;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Message;
-import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounterSettings;
+import com.jayway.messagecounter.infrastructure.messaging.protocol.MessageCounter;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Messages;
 import com.jayway.messagecounter.infrastructure.messaging.protocol.Topic;
 import com.rabbitmq.client.AMQP;
@@ -40,16 +40,16 @@ public class RabbitMQServiceRegistrar implements Managed {
 
     @Override
     public void start() throws Exception {
-        Message message = Messages.serviceOnline(MessageCounterSettings.APP_ID, description, creator, serviceUrl, sourceUrl);
+        Message message = Messages.serviceOnline(MessageCounter.APP_ID, description, creator, serviceUrl, sourceUrl);
         sendMessage(message, Topic.SERVICE.getRoutingKey());
-        log.info("Registered service {}", MessageCounterSettings.APP_ID);
+        log.info("Registered service {}", MessageCounter.APP_ID);
     }
 
     @Override
     public void stop() throws Exception {
-        Message message = Messages.serviceOffline(MessageCounterSettings.APP_ID);
+        Message message = Messages.serviceOffline(MessageCounter.APP_ID);
         sendMessage(message, Topic.SERVICE.getRoutingKey());
-        log.info("Unregistered service {}", MessageCounterSettings.APP_ID);
+        log.info("Unregistered service {}", MessageCounter.APP_ID);
     }
 
     private void sendMessage(Message message, String routingKey) {
