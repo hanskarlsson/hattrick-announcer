@@ -1,0 +1,9 @@
+maxMessageIdsToCache: 10000
+maxTimeToCacheMessageIds: 10
+timeUnit: SECONDS
+amqpUri: amqp://kwiwswxf:2buomLESEgNRRdMWXJ-fFLbpP61mX8Pu@striped-ibex.rmq.cloudamqp.com/kwiwswxf
+
+serviceUrl: http://localhost:8080
+sourceUrl: https://github.com/hanskarlsson/hattrick-announcer
+creator: Hans & Katarina
+description: Announces players winning 3 games in a row

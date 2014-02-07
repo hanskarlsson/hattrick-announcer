@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="messageCounterView" type="com.jayway.messagecounter.infrastructure.resources.MessageCounterView" -->
+<#-- @ftlvariable name="messageCounterView" type="com.jayway.hattrickannouncer.infrastructure.resources.HattrickAnnouncerView" -->
 <html>
     <head>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
